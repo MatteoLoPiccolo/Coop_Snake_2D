@@ -8,6 +8,10 @@ public class UILevel : UIManager
     [SerializeField] Button _restartGameButton;
     [SerializeField] Button _mainMenuButton;
 
+    [Space]
+    [Header("Pause")]
+    [SerializeField] GameObject _pauseObj;
+
     private static UILevel _instance;
     public new static UILevel Instance {  get { return _instance; } }
 
@@ -16,7 +20,6 @@ public class UILevel : UIManager
         if (_instance == null)
         {
             _instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
         else
             Destroy(gameObject);
@@ -39,5 +42,15 @@ public class UILevel : UIManager
     public void GameOver()
     {
         _gameOverObj.SetActive(true);
+    }
+
+    public void Pause()
+    {
+        _pauseObj.SetActive(true);
+    }
+
+    public void Unpause()
+    {
+        _pauseObj.SetActive(false);
     }
 }

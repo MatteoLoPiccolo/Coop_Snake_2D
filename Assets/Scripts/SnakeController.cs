@@ -5,26 +5,32 @@ public class SnakeController : MonoBehaviour
 {
     [SerializeField] int _initialSize = 4;
     [SerializeField] GameObject _segment;
-    [SerializeField] Camera _mainCamera;
+    [SerializeField] GameObject _segmentContainer;
 
     private Vector2 _direction = Vector2.right;
     private List<GameObject> _segments = new List<GameObject>();
 
+    public bool HasBody { get { return _segments.Count > 0; } }
+
     // Start is called before the first frame update
     private void Start()
     {
-        //_segments.Add(gameObject);
-
         for (int i = 1; i <= _initialSize; i++)
         {
             var body = Instantiate(_segment, transform.position - new Vector3(i, 0, 0), Quaternion.identity);
             _segments.Add(body);
+            body.transform.SetParent(_segmentContainer.transform);
         }
     }
 
     // Update is called once per frame
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PauseUnpause();
+        }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             _direction = Vector2.up;
@@ -43,6 +49,20 @@ public class SnakeController : MonoBehaviour
         }
 
         CheckBounds();
+    }
+
+    private static void PauseUnpause()
+    {
+        if (Time.timeScale == 0f)
+        {
+            Time.timeScale = 1f;
+            UILevel.Instance.Unpause();
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            UILevel.Instance.Pause();
+        }
     }
 
     private void FixedUpdate()
@@ -86,6 +106,9 @@ public class SnakeController : MonoBehaviour
 
     private void MoveSnakeBody()
     {
+        if (_segments.Count == 0)
+            return;
+
         for (int i = _segments.Count - 1; i > 0; i--)
         {
             _segments[i].transform.position = _segments[i - 1].transform.position;
@@ -97,14 +120,22 @@ public class SnakeController : MonoBehaviour
     public void Grow()
     {
         GameObject segment = Instantiate(_segment);
-        segment.transform.position = _segments[_segments.Count - 1].transform.position;
+
+        if(_segments.Count == 0)
+            segment.transform.position = transform.position;
+        else
+            segment.transform.position = _segments[_segments.Count - 1].transform.position;
 
         _segments.Add(segment);
+        segment.transform.SetParent(_segmentContainer.transform);
     }
 
     public void Shrink()
     {
-        if (_segments.Count == _initialSize)
+        //if (_segments.Count == 0)
+        //    return;
+
+        if (!HasBody)
             return;
 
         var lastsegment = _segments.Count - 1;

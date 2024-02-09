@@ -6,6 +6,13 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
+    [Header("Player1 reference")]
+    [SerializeField] private SnakeController _snake1;
+
+    [Space]
+    [Header("Player2 reference")]
+    [SerializeField] private GameObject _snake2;
+
     [Header("Level Buonds Collider")]
     [SerializeField] BoxCollider2D _levelBounds;
 
@@ -18,13 +25,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject _massBurner;
     [SerializeField] float _massBurnerInitialDelay;
     [SerializeField] float _massBurnerSpawnInterval;
+    [SerializeField] float _massBurnerCoroutineTimeCheck;
 
     private void Awake()
     {
         if (Instance == null)
         {
             _instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -63,6 +70,9 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
+            if(!_snake1.HasBody)
+                yield return new WaitForSeconds(_massBurnerCoroutineTimeCheck);
+
             float x, y;
             CalculateRandomPosition(out x, out y);
 
