@@ -3,13 +3,10 @@ using UnityEngine;
 
 public class SnakeController : MonoBehaviour
 {
-    [SerializeField] float _speed = 5f;
     [SerializeField] int _initialSize = 4;
     [SerializeField] GameObject _segment;
     [SerializeField] Camera _mainCamera;
 
-    private float _boundsX = 20.8f;
-    private float _boundsY = 13f;
     private Vector2 _direction = Vector2.right;
     private List<GameObject> _segments = new List<GameObject>();
 
@@ -51,10 +48,11 @@ public class SnakeController : MonoBehaviour
     private void FixedUpdate()
     {
         MoveSnakeBody();
+        Move();
+    }
 
-        //Vector2 roundedDirection = new Vector2(Mathf.Round(_direction.x), Mathf.Round(_direction.y));
-        //transform.position += (Vector3)(roundedDirection * _speed * Time.fixedDeltaTime);
-
+    private void Move()
+    {
         transform.position = new Vector3(Mathf.Round(transform.position.x) + _direction.x, Mathf.Round(transform.position.y) + _direction.y);
     }
 

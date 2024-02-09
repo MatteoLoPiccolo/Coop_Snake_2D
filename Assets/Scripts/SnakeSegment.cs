@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SnakeSegment : MonoBehaviour
 {
@@ -7,9 +6,10 @@ public class SnakeSegment : MonoBehaviour
     {
         SnakeController controller = collision.GetComponent<SnakeController>();
 
-        if (controller != null )
+        if (controller != null && UILevel.Instance != null)
         {
-            SceneManager.LoadScene(0);
+            UILevel.Instance.GameOver();
+            controller.enabled = false;
         }
     }
 }
