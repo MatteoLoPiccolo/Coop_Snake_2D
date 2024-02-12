@@ -6,12 +6,15 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
+    private Vector3 _snake1CoopPosition = new Vector3(0f, 6.5f, 0f);
+    private Vector3 _snake2CoopPosition = new Vector3(0f, -6.5f, 0f);
+
     [Header("Player1 reference")]
     [SerializeField] private SnakeController _snake1;
 
     [Space]
     [Header("Player2 reference")]
-    [SerializeField] private GameObject _snake2;
+    [SerializeField] private SnakeController _snake2;
 
     [Header("Level Buonds Collider")]
     [SerializeField] BoxCollider2D _levelBounds;
@@ -60,8 +63,8 @@ public class GameManager : MonoBehaviour
     {
         Bounds bounds = _levelBounds.bounds;
 
-        x = Random.Range(bounds.min.x, bounds.max.x);
-        y = Random.Range(bounds.min.y, bounds.max.y);
+        x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
+        y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
     }
 
     private IEnumerator SpawnMassBurnerAtRandomPosition()
@@ -70,7 +73,7 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            if(!_snake1.HasBody)
+            if (!_snake1.HasBody)
                 yield return new WaitForSeconds(_massBurnerCoroutineTimeCheck);
 
             float x, y;

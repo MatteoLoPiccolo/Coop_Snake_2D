@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,13 @@ public class SnakeController : MonoBehaviour
     [SerializeField] GameObject _segment;
     [SerializeField] GameObject _segmentContainer;
 
+    private bool isPaused = false;
     private Vector2 _direction = Vector2.right;
     private List<GameObject> _segments = new List<GameObject>();
 
     public bool HasBody { get { return _segments.Count > 0; } }
+
+    [SerializeField] bool IsSnake2;
 
     // Start is called before the first frame update
     private void Start()
@@ -26,11 +30,42 @@ public class SnakeController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!IsSnake2)
+            HandleInputSnake1();
+        else
+            HandleInputSnake2();
+
+        CheckBounds();
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            PauseUnpause();
-        }
+            Debug.Log("I pressed " + Enum.GetName(typeof(KeyCode), KeyCode.Space));
 
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                TogglePause();
+            }
+        }
+    }
+
+    void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        if (isPaused)
+        {
+            Time.timeScale = 0f;
+            UILevel.Instance.Pause();
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            UILevel.Instance.Unpause();
+        }
+    }
+
+    private void HandleInputSnake1()
+    {
         if (Input.GetKeyDown(KeyCode.W))
         {
             _direction = Vector2.up;
@@ -47,21 +82,25 @@ public class SnakeController : MonoBehaviour
         {
             _direction = Vector2.right;
         }
-
-        CheckBounds();
     }
 
-    private static void PauseUnpause()
+    private void HandleInputSnake2()
     {
-        if (Time.timeScale == 0f)
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Time.timeScale = 1f;
-            UILevel.Instance.Unpause();
+            _direction = Vector2.up;
         }
-        else
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Time.timeScale = 0f;
-            UILevel.Instance.Pause();
+            _direction = Vector2.down;
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            _direction = Vector2.left;
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            _direction = Vector2.right;
         }
     }
 
@@ -86,19 +125,19 @@ public class SnakeController : MonoBehaviour
         float topOfScreenInWorld = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).y;
         float bottomOfScreenInWorld = Camera.main.ScreenToWorldPoint(new Vector2(0, 0)).y;
 
-        if(screenPos.x <= 0 && _direction == Vector2.left)
+        if (screenPos.x <= 0 && _direction == Vector2.left)
         {
             transform.position = new Vector2(rightSideOfTheScreenInWorld, transform.position.y);
         }
-        else if(screenPos.x >= Screen.width && _direction == Vector2.right)
+        else if (screenPos.x >= Screen.width && _direction == Vector2.right)
         {
             transform.position = new Vector2(leftSideOfTheScreenInWorld, transform.position.y);
         }
-        else if(screenPos.y >= Screen.height && _direction == Vector2.up)
+        else if (screenPos.y >= Screen.height && _direction == Vector2.up)
         {
             transform.position = new Vector2(transform.position.x, bottomOfScreenInWorld);
         }
-        else if(screenPos.y <= 0 && _direction == Vector2.down)
+        else if (screenPos.y <= 0 && _direction == Vector2.down)
         {
             transform.position = new Vector2(transform.position.x, topOfScreenInWorld);
         }
@@ -121,7 +160,7 @@ public class SnakeController : MonoBehaviour
     {
         GameObject segment = Instantiate(_segment);
 
-        if(_segments.Count == 0)
+        if (_segments.Count == 0)
             segment.transform.position = transform.position;
         else
             segment.transform.position = _segments[_segments.Count - 1].transform.position;
@@ -132,9 +171,6 @@ public class SnakeController : MonoBehaviour
 
     public void Shrink()
     {
-        //if (_segments.Count == 0)
-        //    return;
-
         if (!HasBody)
             return;
 

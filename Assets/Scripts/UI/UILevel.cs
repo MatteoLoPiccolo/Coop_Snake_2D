@@ -13,9 +13,9 @@ public class UILevel : UIManager
     [SerializeField] GameObject _pauseObj;
 
     private static UILevel _instance;
-    public new static UILevel Instance {  get { return _instance; } }
+    public static UILevel Instance { get { return _instance; } }
 
-    protected override void Awake()
+    private void Awake()
     {
         if (_instance == null)
         {
@@ -29,13 +29,13 @@ public class UILevel : UIManager
 
     private void Start()
     {
-        _restartGameButton.onClick.AddListener(StartGame);
+        _restartGameButton.onClick.AddListener(Play);
         _mainMenuButton.onClick.AddListener(MainMenu);
     }
 
     protected override void OnDestroy()
     {
-        _restartGameButton.onClick.RemoveListener(StartGame);
+        _restartGameButton.onClick.RemoveListener(Play);
         _mainMenuButton.onClick.RemoveListener(MainMenu);
     }
 
