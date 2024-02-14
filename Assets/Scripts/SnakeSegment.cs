@@ -8,8 +8,10 @@ public class SnakeSegment : MonoBehaviour
 
         if (controller != null && UILevel.Instance != null)
         {
+            controller.IsDead();
+            GameManager.Instance.GameOverController();
             UILevel.Instance.GameOver();
-            controller.enabled = false;
+            UILevel.Instance.WinScreen();
         }
     }
 }

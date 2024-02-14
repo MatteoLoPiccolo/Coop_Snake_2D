@@ -6,9 +6,6 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    private Vector3 _snake1CoopPosition = new Vector3(0f, 6.5f, 0f);
-    private Vector3 _snake2CoopPosition = new Vector3(0f, -6.5f, 0f);
-
     [Header("Player1 reference")]
     [SerializeField] private SnakeController _snake1;
 
@@ -29,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _massBurnerInitialDelay;
     [SerializeField] float _massBurnerSpawnInterval;
     [SerializeField] float _massBurnerCoroutineTimeCheck;
+    [SerializeField] float _massBurnerDestroyTimer;
 
     private void Awake()
     {
@@ -45,8 +43,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        Time.timeScale = 1f;
         SpawnMassGainerAtRandomPosition();
-
         StartCoroutine(SpawnMassBurnerAtRandomPosition());
     }
 
@@ -81,7 +79,14 @@ public class GameManager : MonoBehaviour
 
             GameObject massBurner = Instantiate(_massBurner);
             massBurner.transform.position = new Vector3(Mathf.Round(x), Mathf.Round(y), 0f);
+            Destroy(massBurner, _massBurnerDestroyTimer);
             yield return new WaitForSeconds(_massBurnerSpawnInterval);
         }
+    }
+
+    public void GameOverController()
+    {
+        if(_snake1.IsDead() || _snake2.IsDead())
+            Time.timeScale = 0f;
     }
 }

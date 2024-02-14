@@ -8,7 +8,6 @@ public class MassBurner : MonoBehaviour
 
         if (controller != null)
         {
-            //GameManager.Instance.SpawnMassBurnerAtRandomPosition();
             controller.Shrink();
             Destroy(gameObject);
         }

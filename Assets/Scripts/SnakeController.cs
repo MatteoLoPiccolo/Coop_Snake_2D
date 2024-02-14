@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,11 +14,19 @@ public class SnakeController : MonoBehaviour
 
     public bool HasBody { get { return _segments.Count > 0; } }
 
-    [SerializeField] bool IsSnake2;
+    private int _score;
+    public int Score { get { return _score; } }
+    private int _scoreMultiplier = 2;
+
+    [SerializeField] bool _isSnake2;
+
+    public bool IsSnake2 { get {  return _isSnake2; } }
 
     // Start is called before the first frame update
     private void Start()
     {
+        _score = 0;
+
         for (int i = 1; i <= _initialSize; i++)
         {
             var body = Instantiate(_segment, transform.position - new Vector3(i, 0, 0), Quaternion.identity);
@@ -30,7 +38,7 @@ public class SnakeController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!IsSnake2)
+        if (!_isSnake2)
             HandleInputSnake1();
         else
             HandleInputSnake2();
@@ -39,8 +47,6 @@ public class SnakeController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("I pressed " + Enum.GetName(typeof(KeyCode), KeyCode.Space));
-
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 TogglePause();
@@ -115,6 +121,20 @@ public class SnakeController : MonoBehaviour
         transform.position = new Vector3(Mathf.Round(transform.position.x) + _direction.x, Mathf.Round(transform.position.y) + _direction.y);
     }
 
+    public bool IsHitHimself()
+    {
+        for (int i = 0; i < _segments.Count; i++)
+        {
+            if(transform.position == _segments[i].transform.position)
+            {
+                Debug.Log("I hit myself!");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void CheckBounds()
     {
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
@@ -167,6 +187,8 @@ public class SnakeController : MonoBehaviour
 
         _segments.Add(segment);
         segment.transform.SetParent(_segmentContainer.transform);
+
+        ScoreMultiplier();
     }
 
     public void Shrink()
@@ -177,5 +199,28 @@ public class SnakeController : MonoBehaviour
         var lastsegment = _segments.Count - 1;
         Destroy(_segments[lastsegment]);
         _segments.Remove(_segments[lastsegment]);
+    }
+
+    public void UpdateScore(int amount)
+    {
+        _score += amount;
+    }
+
+    public bool IsDead()
+    {
+        return true;
+    }
+
+    private void ScoreMultiplier()
+    {
+        _score *= _scoreMultiplier;
+        StartCoroutine(ScoreMultiplierCooldown());
+    }
+
+    private IEnumerator ScoreMultiplierCooldown()
+    {
+        float cooldown = 3;
+        yield return new WaitForSeconds(cooldown);
+        _scoreMultiplier = 1;
     }
 }
