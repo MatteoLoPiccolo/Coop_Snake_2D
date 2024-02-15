@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class MassGainer : MonoBehaviour
 {
-    [Header("Score")]
-    [SerializeField] int _score = 10;
+    [SerializeField] private int _score = 10;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

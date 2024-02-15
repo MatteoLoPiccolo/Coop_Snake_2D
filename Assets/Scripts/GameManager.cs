@@ -6,27 +6,24 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    [Header("Player1 reference")]
+    [Header("Players reference")]
     [SerializeField] private SnakeController _snake1;
-
-    [Space]
-    [Header("Player2 reference")]
     [SerializeField] private SnakeController _snake2;
 
     [Header("Level Buonds Collider")]
-    [SerializeField] BoxCollider2D _levelBounds;
+    [SerializeField] private BoxCollider2D _levelBounds;
 
     [Space]
     [Header("Mass Gainer reference")]
-    [SerializeField] GameObject _massGainer;
+    [SerializeField] private GameObject _massGainer;
 
     [Space]
     [Header("Mass Burner reference and time spawn delay")]
-    [SerializeField] GameObject _massBurner;
-    [SerializeField] float _massBurnerInitialDelay;
-    [SerializeField] float _massBurnerSpawnInterval;
-    [SerializeField] float _massBurnerCoroutineTimeCheck;
-    [SerializeField] float _massBurnerDestroyTimer;
+    [SerializeField] private GameObject _massBurner;
+    [SerializeField] private float _massBurnerInitialDelay;
+    [SerializeField] private float _massBurnerSpawnInterval;
+    [SerializeField] private float _massBurnerCoroutineTimeCheck;
+    [SerializeField] private float _massBurnerDestroyTimer;
 
     private void Awake()
     {
@@ -40,7 +37,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     private void Start()
     {
         Time.timeScale = 1f;

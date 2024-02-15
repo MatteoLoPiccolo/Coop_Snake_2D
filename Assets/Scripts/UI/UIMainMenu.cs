@@ -4,9 +4,8 @@ using UnityEngine.UI;
 public class UIMainMenu : UIManager
 {
     [Header("Main Menu")]
-
-    [SerializeField] Button _singleGameButton;
-    [SerializeField] Button _quitGameButton;
+    [SerializeField] private Button _singleGameButton;
+    [SerializeField] private Button _quitGameButton;
 
     private void Start()
     {

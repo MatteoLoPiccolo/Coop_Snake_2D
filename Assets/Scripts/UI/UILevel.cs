@@ -6,30 +6,29 @@ using UnityEngine.UI;
 public class UILevel : UIManager
 {
     [Header("Players reference")]
-    [SerializeField] SnakeController _snakeController1;
-    [SerializeField] SnakeController _snakeController2;
+    [SerializeField] private SnakeController _snakeController1;
+    [SerializeField] private SnakeController _snakeController2;
 
     [Header("Game Over")]
-    [SerializeField] GameObject _gameOverObj;
-    [SerializeField] Button _restartGameButton;
-    [SerializeField] Button _mainMenuButton;
+    [SerializeField] private GameObject _gameOverObj;
+    [SerializeField] private Button _restartGameButton;
+    [SerializeField] private Button _mainMenuButton;
 
     [Space]
     [Header("Pause")]
-    [SerializeField] GameObject _pauseObj;
+    [SerializeField] private GameObject _pauseObj;
 
     [Space]
     [Header("Score")]
-    //[SerializeField] GameObject _scoreObj;
-    [SerializeField] GameObject _scoreOne;
-    [SerializeField] GameObject _scoreTwo;
-    [SerializeField] TextMeshProUGUI _scoreOneText;
-    [SerializeField] TextMeshProUGUI _scoreTwoText;
+    [SerializeField] private GameObject _scoreOne;
+    [SerializeField] private GameObject _scoreTwo;
+    [SerializeField] private TextMeshProUGUI _scoreOneText;
+    [SerializeField] private TextMeshProUGUI _scoreTwoText;
 
     [Space]
     [Header("Win UI")]
-    [SerializeField] GameObject _winObj;
-    [SerializeField] TextMeshProUGUI _winText;
+    [SerializeField] private GameObject _winObj;
+    [SerializeField] private TextMeshProUGUI _winText;
 
     private static UILevel _instance;
     public static UILevel Instance { get { return _instance; } }
@@ -74,25 +73,23 @@ public class UILevel : UIManager
     {
         _scoreOne.SetActive(true);
         _scoreOneText.text = "Snake 1 score: " + _snakeController1.Score.ToString();
-        StartCoroutine(ScoreOneDisappear());
+        Invoke("ScoreOneDisappear", 0.7f);
     }
 
     public void UpdateSnakeTwoScore()
     {
         _scoreTwo.SetActive(true);
         _scoreTwoText.text = "Snake 2 score: " + _snakeController2.Score.ToString();
-        StartCoroutine(ScoreTwoDisappear());
+        Invoke("ScoreTwoDisappear", 0.7f);
     }
 
-    IEnumerator ScoreOneDisappear()
+    private void ScoreOneDisappear()
     {
-        yield return new WaitForSeconds(0.5f);
         _scoreOne.SetActive(false);
     }
 
-    IEnumerator ScoreTwoDisappear()
+    private void ScoreTwoDisappear()
     {
-        yield return new WaitForSeconds(0.5f);
         _scoreTwo.SetActive(false);
     }
 

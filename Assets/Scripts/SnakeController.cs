@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SnakeController : MonoBehaviour
 {
-    [SerializeField] int _initialSize = 4;
-    [SerializeField] GameObject _segment;
-    [SerializeField] GameObject _segmentContainer;
+    [SerializeField] private int _initialSize = 4;
+    [SerializeField] private GameObject _segment;
+    [SerializeField] private GameObject _segmentContainer;
 
     private bool isPaused = false;
     private Vector2 _direction = Vector2.right;
@@ -19,14 +19,17 @@ public class SnakeController : MonoBehaviour
     private int _scoreMultiplier = 2;
 
     [SerializeField] bool _isSnake2;
-
     public bool IsSnake2 { get {  return _isSnake2; } }
 
-    // Start is called before the first frame update
     private void Start()
     {
         _score = 0;
 
+        SetInitialSizeOfTheSnake();
+    }
+
+    private void SetInitialSizeOfTheSnake()
+    {
         for (int i = 1; i <= _initialSize; i++)
         {
             var body = Instantiate(_segment, transform.position - new Vector3(i, 0, 0), Quaternion.identity);
@@ -35,7 +38,6 @@ public class SnakeController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (!_isSnake2)
@@ -118,7 +120,11 @@ public class SnakeController : MonoBehaviour
 
     private void Move()
     {
-        transform.position = new Vector3(Mathf.Round(transform.position.x) + _direction.x, Mathf.Round(transform.position.y) + _direction.y);
+        float newX = Mathf.Round(transform.position.x) + _direction.x;
+        float newY = Mathf.Round(transform.position.y) + _direction.y;
+
+        transform.position = new Vector3(newX, newY, transform.position.z);
+        //transform.position = new Vector3(Mathf.Round(transform.position.x) + _direction.x, Mathf.Round(transform.position.y) + _direction.y);
     }
 
     public bool IsHitHimself()
@@ -214,13 +220,12 @@ public class SnakeController : MonoBehaviour
     private void ScoreMultiplier()
     {
         _score *= _scoreMultiplier;
-        StartCoroutine(ScoreMultiplierCooldown());
+        Invoke("ScoreMultiplierCooldown", 3.0f);
     }
 
-    private IEnumerator ScoreMultiplierCooldown()
+    private void ScoreMultiplierCooldown()
     {
-        float cooldown = 3;
-        yield return new WaitForSeconds(cooldown);
         _scoreMultiplier = 1;
+        Debug.Log("My multiplier is now : " + _scoreMultiplier);
     }
 }
