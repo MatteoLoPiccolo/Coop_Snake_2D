@@ -12,3 +12,8 @@ For the random spawn, I used coroutines and had fun testing a couple of coroutin
 I plan to polish the project and maybe add management through events or some pattern.
 
 I'll keep you updated!
+
+P.S. a couple of video about the project
+https://drive.google.com/file/d/1hCAx3XTTxFZcPYomg8a-22FFh9Cw4uxl/view?usp=sharing
+
+https://drive.google.com/file/d/1R9neCOGRH2tkO6ZOwifEovLNVv6cBqN3/view?usp=sharing
